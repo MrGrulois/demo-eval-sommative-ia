@@ -375,10 +375,12 @@
   </span>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
+emailjs.init('yzcgp5RUWiKKgBowi');
+
 const STORAGE_KEY = 'suk_kain_registrations_2025';
 const ADMIN_KEY   = 'suk_kain_session_info_2025';
-const ORGANIZER_EMAIL = 'a3d.contact@gmail.com';
 
 function getRegistrations() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
@@ -389,7 +391,6 @@ function getInitials(p, n) { return ((p[0]||'')+(n[0]||'')).toUpperCase(); }
 function renderList() {
   const regs = getRegistrations();
   document.getElementById('counter-num').textContent = regs.length;
-  // Barre de progression indicative (10 inscrits = 100%)
   const pct = Math.min((regs.length / 10) * 100, 100);
   document.getElementById('progress-fill').style.width = pct + '%';
   const list = document.getElementById('reg-list');
@@ -407,7 +408,7 @@ function renderList() {
     </div>`).join('');
 }
 
-function submitForm(e) {
+async function submitForm(e) {
   e.preventDefault();
   const btn = document.getElementById('btn-submit');
   const regs = getRegistrations();
@@ -423,33 +424,42 @@ function submitForm(e) {
   const now     = new Date();
   const dateStr = now.toLocaleDateString('fr-BE', { day:'2-digit', month:'short', year:'numeric' });
 
-  // Sauvegarder localement
+  // Sauvegarder localement d'abord
   regs.push({ prenom, nom, email, matiere, message, date: dateStr });
   saveRegistrations(regs);
 
-  // Ouvrir le client mail pour notifier l'organisateur
+  // Désactiver le bouton et afficher l'indicateur
   btn.disabled = true;
   document.getElementById('sending-msg').classList.add('show');
 
-  const subject = encodeURIComponent(`[Inscription] ${prenom} ${nom} — Session IA · 23 juin`);
-  const body = encodeURIComponent(
-    `Nouvelle inscription reçue :\n\n` +
-    `Nom : ${prenom} ${nom}\n` +
-    `Email : ${email}\n` +
-    `Matière : ${matiere}\n` +
-    `Message : ${message || '(aucun)'}\n` +
-    `Date d'inscription : ${dateStr}\n\n` +
-    `Total inscrits : ${regs.length}\n\n` +
-    `— Formulaire d'inscription Session IA · Sainte-Union de Kain`
-  );
-
-  setTimeout(() => {
-    window.location.href = `mailto:${ORGANIZER_EMAIL}?subject=${subject}&body=${body}`;
+  try {
+    await emailjs.send('service_v7hlu4a', 'template_ibobusq', {
+      prenom,
+      nom,
+      email,
+      matiere,
+      message: message || '(aucun)',
+      date:    dateStr,
+      total:   regs.length
+    });
+    // Succès
     document.getElementById('sending-msg').classList.remove('show');
     document.getElementById('reg-form').style.display = 'none';
     document.getElementById('success-box').classList.add('show');
     renderList();
-  }, 800);
+  } catch (err) {
+    // Échec envoi mail — on garde quand même l'inscription locale
+    console.error('EmailJS error:', err);
+    document.getElementById('sending-msg').classList.remove('show');
+    document.getElementById('reg-form').style.display = 'none';
+    document.getElementById('success-box').innerHTML = `
+      <div class="success-icon">✅</div>
+      <h3>Inscription enregistrée !</h3>
+      <p>Votre inscription est bien sauvegardée.<br>
+      <small style="color:#888">La notification email n'a pas pu être envoyée — prévenez Mr Grulois directement.</small></p>`;
+    document.getElementById('success-box').classList.add('show');
+    renderList();
+  }
 }
 
 function toggleAdmin() {
