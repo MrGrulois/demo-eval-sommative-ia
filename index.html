@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inscription — Session IA & Évaluation numérique · Sainte-Union de Kain</title>
+<style>
+  :root {
+    --primary:  #8b1a2e;
+    --primary2: #6b1323;
+    --accent:   #A8D040;
+    --accent2:  #88b030;
+    --bg:       #f5f3f0;
+    --card:     #ffffff;
+    --text:     #1e1a18;
+    --muted:    #6b6560;
+    --border:   #ddd8d0;
+    --green:    #5a9010;
+    --radius:   12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Georgia, serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    background: var(--primary2); color: rgba(255,255,255,0.75);
+    text-align: center; font-size: 0.78rem; padding: 6px 16px; letter-spacing: 0.06em;
+  }
+  .topbar strong { color: #fff; }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--primary);
+    background-image: linear-gradient(135deg, #6b1323 0%, #8b1a2e 50%, #a02035 100%);
+    color: #fff; padding: 56px 24px 80px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(circle at 80% 20%, rgba(168,208,64,0.15) 0%, transparent 60%),
+                      radial-gradient(circle at 20% 80%, rgba(168,208,64,0.08) 0%, transparent 50%);
+  }
+  .hero::after {
+    content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 50px;
+    background: var(--bg); clip-path: ellipse(55% 100% at 50% 100%);
+  }
+  .hero-logo {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    padding: 6px 18px; border-radius: 99px; font-size: 0.82rem;
+    letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700;
+    color: rgba(255,255,255,0.9); margin-bottom: 24px;
+  }
+  .hero-logo img { width: 24px; height: 24px; border-radius: 50%; }
+  .hero h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 800; line-height: 1.15; margin-bottom: 14px; font-family: Georgia, serif; }
+  .hero h1 em { color: var(--accent); font-style: normal; }
+  .hero-sub { font-size: 1rem; opacity: 0.78; max-width: 540px; margin: 0 auto 32px; line-height: 1.65; font-family: 'Segoe UI', sans-serif; }
+  .hero-meta { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; margin-bottom: 10px; position: relative; z-index: 1; }
+  .hero-chip {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+    padding: 8px 18px; border-radius: 99px; font-size: 0.88rem; font-family: 'Segoe UI', sans-serif;
+  }
+
+  /* ── CONTENT ── */
+  .content { max-width: 900px; margin: 0 auto; padding: 40px 20px 60px; }
+
+  .section-title {
+    font-size: 1.15rem; font-weight: 800; color: var(--primary); margin-bottom: 16px;
+    padding-bottom: 8px; border-bottom: 3px solid var(--accent);
+    font-family: Georgia, serif; letter-spacing: 0.01em;
+  }
+
+  /* ── FEATURES ── */
+  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-bottom: 48px; }
+  .feat {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; border-left: 4px solid var(--primary);
+  }
+  .feat-icon { font-size: 1.5rem; margin-bottom: 10px; }
+  .feat h3 { font-size: 0.92rem; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+  .feat p  { font-size: 0.83rem; color: var(--muted); line-height: 1.5; }
+
+  /* ── PROGRAMME ── */
+  .programme { display: flex; flex-direction: column; gap: 8px; margin-bottom: 48px; }
+  .prog-item {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px;
+    transition: border-color 0.15s;
+  }
+  .prog-item:hover { border-color: var(--primary); }
+  .prog-num {
+    width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: #fff;
+    font-weight: 800; font-size: 0.88rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .prog-text { font-size: 0.95rem; font-weight: 700; color: var(--primary); }
+
+  /* ── COUNTER ── */
+  .counter-bar {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px 24px; margin-bottom: 32px; display: flex; align-items: center;
+    justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+  .counter-num   { font-size: 2.4rem; font-weight: 800; color: var(--primary); line-height: 1; font-family: Georgia, serif; }
+  .counter-label { font-size: 0.84rem; color: var(--muted); margin-top: 2px; }
+  .counter-progress { flex: 1; min-width: 160px; }
+  .progress-track { background: var(--bg); border-radius: 99px; height: 8px; overflow: hidden; margin-top: 6px; }
+  .progress-fill  { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 99px; transition: width 0.6s ease; }
+
+  /* ── FORM ── */
+  .form-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 32px; margin-bottom: 32px; box-shadow: 0 4px 24px rgba(139,26,46,0.06);
+    border-top: 4px solid var(--primary);
+  }
+  .form-title { font-size: 1.25rem; font-weight: 800; color: var(--primary); margin-bottom: 4px; font-family: Georgia, serif; }
+  .form-sub   { font-size: 0.88rem; color: var(--muted); margin-bottom: 24px; }
+  .form-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 0.83rem; font-weight: 700; color: var(--primary); }
+  label .req { color: var(--accent2); }
+  input[type=text], input[type=email], select, textarea {
+    width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px;
+    font-size: 0.93rem; font-family: 'Segoe UI', sans-serif; color: var(--text);
+    background: #faf9f8; transition: border-color 0.2s;
+  }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); background: #fff; }
+  textarea { min-height: 76px; resize: vertical; }
+  .checkbox-row { display: flex; align-items: flex-start; gap: 10px; margin-top: 4px; }
+  .checkbox-row input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--primary); flex-shrink: 0; margin-top: 2px; }
+  .checkbox-row label { font-weight: 400; font-size: 0.85rem; color: var(--text); }
+
+  .btn-submit {
+    width: 100%; padding: 14px; background: var(--primary); color: #fff; border: none;
+    border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer;
+    margin-top: 20px; transition: background 0.18s, transform 0.1s; letter-spacing: 0.02em;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  .btn-submit:hover  { background: var(--primary2); }
+  .btn-submit:active { transform: scale(0.99); }
+  .btn-submit:disabled { background: #bbb; cursor: not-allowed; }
+
+  /* ── SUCCESS ── */
+  .success-box {
+    display: none; background: #f0f9f2; border: 2px solid var(--green);
+    border-radius: 12px; padding: 28px; text-align: center; margin-top: 20px;
+  }
+  .success-box.show { display: block; }
+  .success-icon { font-size: 2.5rem; margin-bottom: 10px; }
+  .success-box h3 { color: var(--green); font-size: 1.15rem; margin-bottom: 6px; font-family: Georgia, serif; }
+  .success-box p  { color: #2e5e38; font-size: 0.9rem; line-height: 1.5; }
+
+  /* ── LIST ── */
+  .registered-list { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 40px; }
+  .reg-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .reg-item:last-child { border-bottom: none; }
+  .reg-avatar {
+    width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: #fff;
+    font-weight: 700; font-size: 0.82rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .reg-name { font-weight: 600; font-size: 0.92rem; }
+  .reg-meta { font-size: 0.78rem; color: var(--muted); }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--primary2); color: rgba(255,255,255,0.7);
+    text-align: center; padding: 24px 20px; font-size: 0.82rem; font-family: 'Segoe UI', sans-serif;
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+  .footer strong { color: #fff; }
+
+  /* ── ADMIN ── */
+  .admin-toggle { text-align: center; margin-bottom: 12px; }
+  .btn-admin { background: transparent; border: 1px solid var(--border); border-radius: 99px; padding: 5px 16px; font-size: 0.78rem; color: var(--muted); cursor: pointer; font-family: 'Segoe UI', sans-serif; }
+  .btn-admin:hover { border-color: var(--primary); color: var(--primary); }
+  .admin-panel { display: none; background: #fdf8f0; border: 1px solid #e8d5a0; border-radius: 10px; padding: 18px; margin-bottom: 24px; }
+  .admin-panel.show { display: block; }
+  .admin-panel h4 { font-size: 0.85rem; font-weight: 700; color: #7a4f00; margin-bottom: 12px; }
+  .export-btn { background: var(--primary); color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-size: 0.85rem; cursor: pointer; font-weight: 600; }
+  .admin-input-label { font-size: 0.78rem; font-weight: 700; color: var(--primary); display: block; margin-bottom: 4px; }
+
+  /* ── SENDING INDICATOR ── */
+  .sending { display: none; text-align: center; padding: 10px; font-size: 0.85rem; color: var(--muted); }
+  .sending.show { display: block; }
+</style>
+</head>
+<body>
+
+<div class="topbar"><strong>Sainte-Union de Kain</strong> &nbsp;·&nbsp; Session pédagogique · IA & Évaluation numérique &nbsp;·&nbsp; Mardi 23 juin 2025 · 13h30</div>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div style="position:relative;z-index:1">
+    <div class="hero-logo">
+      <img src="https://www.sukain.be/secondaire/wp-content/uploads/2020/04/cropped-logo-suk-2-270x270.jpg" alt="Logo SUK" onerror="this.style.display='none'">
+      Sainte-Union de Kain — Secondaire
+    </div>
+    <h1>Intelligence Artificielle &<br><em>Évaluation numérique</em></h1>
+    <p class="hero-sub">Session de découverte, démonstration live et brainstorming collectif.<br>Réservée aux enseignants de l'école.</p>
+    <div style="display:inline-block;background:rgba(168,208,64,0.2);border:1px solid rgba(168,208,64,0.5);color:#A8D040;padding:6px 20px;border-radius:99px;font-size:0.82rem;font-weight:700;letter-spacing:0.08em;margin-bottom:20px;">
+      ✅ Cette session compte dans vos heures de travail collaboratif
+    </div>
+    <div class="hero-meta">
+      <div class="hero-chip">📅 Mardi 23 juin 2025</div>
+      <div class="hero-chip">🕐 13h30 – 16h00</div>
+      <div class="hero-chip">📍 <span id="hero-place">Local à confirmer</span></div>
+      <div class="hero-chip">⏱ 2h30</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CONTENT ── -->
+<div class="content">
+
+  <!-- Compteur -->
+  <div class="counter-bar">
+    <div>
+      <div class="counter-num" id="counter-num">0</div>
+      <div class="counter-label">collègue(s) inscrit(s)</div>
+    </div>
+    <div class="counter-progress">
+      <div style="font-size:0.8rem;color:var(--muted)">Inscriptions ouvertes — sans limite</div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+    <div style="font-size:0.85rem;color:var(--muted);text-align:right">
+      Inscriptions<br><strong style="color:var(--accent2);font-size:1.1rem">ouvertes ✓</strong>
+    </div>
+  </div>
+
+  <!-- Au programme -->
+  <div class="section-title">Au programme</div>
+  <div class="programme" style="margin-bottom:48px">
+    <div class="prog-item">
+      <div class="prog-num">1</div>
+      <div class="prog-text">Introduction à l'IA — Découverte de Claude (Anthropic)</div>
+    </div>
+    <div class="prog-item">
+      <div class="prog-num">2</div>
+      <div class="prog-text">Démonstration — Évaluation sommative autocorrigée en action</div>
+    </div>
+    <div class="prog-item">
+      <div class="prog-num">3</div>
+      <div class="prog-text">Brainstorming — Adaptation à vos cours & vos matières</div>
+    </div>
+    <div class="prog-item">
+      <div class="prog-num">4</div>
+      <div class="prog-text">Démo live — Création d'une évaluation à partir du cours d'un collègue</div>
+    </div>
+    <div class="prog-item">
+      <div class="prog-num">5</div>
+      <div class="prog-text">Création d'un jeu style Jeopardy — Et partie live entre équipes 🎮</div>
+    </div>
+  </div>
+
+  <!-- Ce que vous allez découvrir -->
+  <div class="section-title">Ce que vous allez découvrir</div>
+  <div class="features" style="margin-bottom:48px">
+    <div class="feat">
+      <div class="feat-icon">🤖</div>
+      <h3>L'IA au service de l'évaluation</h3>
+      <p>Comment Claude corrige les questions ouvertes et génère des feedbacks pour chaque élève.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🎯</div>
+      <h3>8 séries différenciées</h3>
+      <p>Chaque élève reçoit une série unique — copies impossibles, même côte à côte.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">📄</div>
+      <h3>PDF correctif automatique</h3>
+      <p>Chaque élève génère son propre correctif complet — zéro correction manuelle sur les QCM.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🎮</div>
+      <h3>Jeopardy interactif</h3>
+      <p>Un jeu de révision avec buzzer, chronomètre et écran de résultats — testez-le en live !</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">💡</div>
+      <h3>Adaptable à toutes les matières</h3>
+      <p>Français, maths, sciences, langues, histoire… la structure s'adapte à n'importe quel cours.</p>
+    </div>
+  </div>
+
+  <!-- Formulaire -->
+  <div class="form-card" id="form-section">
+    <div class="form-title">Je m'inscris à la session</div>
+    <div class="form-sub">Inscription en 30 secondes — Votre confirmation sera envoyée à Mr Grulois.</div>
+    <form id="reg-form" onsubmit="submitForm(event)">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="f-prenom">Prénom <span class="req">*</span></label>
+          <input type="text" id="f-prenom" placeholder="Votre prénom" required>
+        </div>
+        <div class="form-group">
+          <label for="f-nom">Nom <span class="req">*</span></label>
+          <input type="text" id="f-nom" placeholder="Votre nom" required>
+        </div>
+        <div class="form-group">
+          <label for="f-email">Email <span class="req">*</span></label>
+          <input type="email" id="f-email" placeholder="prenom.nom@sukain.be" required>
+        </div>
+        <div class="form-group">
+          <label for="f-matiere">Matière enseignée <span class="req">*</span></label>
+          <select id="f-matiere" required>
+            <option value="">— Sélectionnez —</option>
+            <option>Informatique</option>
+            <option>Mathématiques</option>
+            <option>Français</option>
+            <option>Sciences</option>
+            <option>Langues modernes</option>
+            <option>Histoire / Géographie</option>
+            <option>Éducation physique</option>
+            <option>Sciences sociales / Éducateur</option>
+            <option>École hôtelière</option>
+            <option>Arts / Musique</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label for="f-message">Une question ou attente particulière ? (facultatif)</label>
+          <textarea id="f-message" placeholder="Ex : Je voudrais savoir comment adapter l'outil pour mon cours de français…"></textarea>
+        </div>
+        <div class="form-group full">
+          <div class="checkbox-row">
+            <input type="checkbox" id="f-consent" required>
+            <label for="f-consent">J'accepte que mon prénom et ma matière soient affichés dans la liste des participants sur cette page. Mon inscription sera transmise à Mr Grulois (a3d.contact@gmail.com).</label>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn-submit" id="btn-submit">✅ Je confirme ma présence — Mardi 23 juin 13h30</button>
+    </form>
+    <div class="sending" id="sending-msg">📧 Envoi de votre inscription en cours…</div>
+    <div class="success-box" id="success-box">
+      <div class="success-icon">🎉</div>
+      <h3>Inscription confirmée !</h3>
+      <p>Merci ! Votre inscription a bien été enregistrée et transmise à Mr Grulois.<br>
+      À mardi 23 juin à 13h30 !</p>
+    </div>
+  </div>
+
+  <!-- Liste inscrits -->
+  <div class="section-title">Participants inscrits</div>
+  <div class="registered-list" id="reg-list">
+    <p style="color:var(--muted);font-size:0.9rem;text-align:center;padding:12px 0">Soyez le premier à vous inscrire !</p>
+  </div>
+
+  <!-- Admin -->
+  <div class="admin-toggle">
+    <button class="btn-admin" onclick="toggleAdmin()">⚙ Vue organisateur</button>
+  </div>
+  <div class="admin-panel" id="admin-panel">
+    <h4>⚙ Panneau organisateur — Sainte-Union de Kain</h4>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+      <div>
+        <span class="admin-input-label">Local de la session</span>
+        <input type="text" id="admin-place" placeholder="ex : Salle informatique B12" style="font-size:0.88rem" oninput="updateHero()">
+      </div>
+      <div style="display:flex;align-items:flex-end">
+        <button class="export-btn" onclick="exportCSV()">📥 Exporter la liste (CSV)</button>
+      </div>
+    </div>
+    <p style="font-size:0.78rem;color:#92400e">Données sauvegardées localement dans ce navigateur. Le CSV contient tous les inscrits avec leur message.</p>
+  </div>
+
+</div>
+
+<!-- ── FOOTER ── -->
+<div class="footer">
+  <strong>École secondaire de la Sainte-Union de Kain</strong> &nbsp;·&nbsp; Tournai<br>
+  Organisé par <strong>Mr Michael Grulois</strong> — <a href="mailto:a3d.contact@gmail.com">a3d.contact@gmail.com</a><br>
+  <span style="font-size:0.75rem;opacity:0.6;margin-top:4px;display:block">
+    Données stockées localement dans votre navigateur — aucun serveur externe
+  </span>
+</div>
+
+<script>
+const STORAGE_KEY = 'suk_kain_registrations_2025';
+const ADMIN_KEY   = 'suk_kain_session_info_2025';
+const ORGANIZER_EMAIL = 'a3d.contact@gmail.com';
+
+function getRegistrations() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
+}
+function saveRegistrations(arr) { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+function getInitials(p, n) { return ((p[0]||'')+(n[0]||'')).toUpperCase(); }
+
+function renderList() {
+  const regs = getRegistrations();
+  document.getElementById('counter-num').textContent = regs.length;
+  // Barre de progression indicative (10 inscrits = 100%)
+  const pct = Math.min((regs.length / 10) * 100, 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  const list = document.getElementById('reg-list');
+  if (!regs.length) {
+    list.innerHTML = '<p style="color:var(--muted);font-size:0.9rem;text-align:center;padding:12px 0">Soyez le premier à vous inscrire !</p>';
+    return;
+  }
+  list.innerHTML = regs.map(r => `
+    <div class="reg-item">
+      <div class="reg-avatar">${getInitials(r.prenom, r.nom)}</div>
+      <div>
+        <div class="reg-name">${r.prenom} ${r.nom}</div>
+        <div class="reg-meta">${r.matiere} · inscrit(e) le ${r.date}</div>
+      </div>
+    </div>`).join('');
+}
+
+function submitForm(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btn-submit');
+  const regs = getRegistrations();
+  const email = document.getElementById('f-email').value.trim().toLowerCase();
+  if (regs.some(r => r.email === email)) {
+    alert('Vous êtes déjà inscrit(e) avec cette adresse email.'); return;
+  }
+
+  const prenom  = document.getElementById('f-prenom').value.trim();
+  const nom     = document.getElementById('f-nom').value.trim();
+  const matiere = document.getElementById('f-matiere').value;
+  const message = document.getElementById('f-message').value.trim();
+  const now     = new Date();
+  const dateStr = now.toLocaleDateString('fr-BE', { day:'2-digit', month:'short', year:'numeric' });
+
+  // Sauvegarder localement
+  regs.push({ prenom, nom, email, matiere, message, date: dateStr });
+  saveRegistrations(regs);
+
+  // Ouvrir le client mail pour notifier l'organisateur
+  btn.disabled = true;
+  document.getElementById('sending-msg').classList.add('show');
+
+  const subject = encodeURIComponent(`[Inscription] ${prenom} ${nom} — Session IA · 23 juin`);
+  const body = encodeURIComponent(
+    `Nouvelle inscription reçue :\n\n` +
+    `Nom : ${prenom} ${nom}\n` +
+    `Email : ${email}\n` +
+    `Matière : ${matiere}\n` +
+    `Message : ${message || '(aucun)'}\n` +
+    `Date d'inscription : ${dateStr}\n\n` +
+    `Total inscrits : ${regs.length}\n\n` +
+    `— Formulaire d'inscription Session IA · Sainte-Union de Kain`
+  );
+
+  setTimeout(() => {
+    window.location.href = `mailto:${ORGANIZER_EMAIL}?subject=${subject}&body=${body}`;
+    document.getElementById('sending-msg').classList.remove('show');
+    document.getElementById('reg-form').style.display = 'none';
+    document.getElementById('success-box').classList.add('show');
+    renderList();
+  }, 800);
+}
+
+function toggleAdmin() {
+  const p = document.getElementById('admin-panel');
+  p.classList.toggle('show');
+  if (p.classList.contains('show')) loadAdminFields();
+}
+
+function loadAdminFields() {
+  try {
+    const info = JSON.parse(localStorage.getItem(ADMIN_KEY) || '{}');
+    if (info.place) { document.getElementById('admin-place').value = info.place; updateHero(); }
+  } catch {}
+}
+
+function updateHero() {
+  const place = document.getElementById('admin-place').value || 'Local à confirmer';
+  document.getElementById('hero-place').textContent = place;
+  localStorage.setItem(ADMIN_KEY, JSON.stringify({ place }));
+}
+
+function exportCSV() {
+  const regs = getRegistrations();
+  if (!regs.length) { alert('Aucun inscrit pour le moment.'); return; }
+  const header = 'Prénom,Nom,Email,Matière,Message,Date';
+  const rows = regs.map(r =>
+    [r.prenom, r.nom, r.email, r.matiere, (r.message||'').replace(/,/g,''), r.date]
+      .map(v => `"${v}"`).join(','));
+  const csv  = [header, ...rows].join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `inscrits_session_IA_sukain_23juin.csv`;
+  a.click();
+}
+
+loadAdminFields();
+renderList();
+</script>
+</body>
+</html>
