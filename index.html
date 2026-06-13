@@ -220,11 +220,11 @@
       <div class="counter-label">collègue(s) inscrit(s)</div>
     </div>
     <div class="counter-progress">
-      <div style="font-size:0.8rem;color:var(--muted)">Inscriptions ouvertes — sans limite</div>
+      <div style="font-size:0.8rem;color:var(--muted)">Objectif : 20 participants</div>
       <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
     </div>
     <div style="font-size:0.85rem;color:var(--muted);text-align:right">
-      Inscriptions<br><strong style="color:var(--accent2);font-size:1.1rem">ouvertes ✓</strong>
+      Places disponibles<br><strong id="places-left" style="color:var(--primary);font-size:1.2rem">20</strong>
     </div>
   </div>
 
@@ -323,9 +323,9 @@
           <textarea id="f-message" placeholder="Ex : Je voudrais savoir comment adapter l'outil pour mon cours de français…"></textarea>
         </div>
         <div class="form-group full">
-          <div class="checkbox-row">
+          <div class="checkbox-row" style="background:#fdf0f2;border:1.5px solid #8b1a2e;border-radius:8px;padding:10px 14px;">
             <input type="checkbox" id="f-consent" required>
-            <label for="f-consent">J'accepte que mon prénom et ma matière soient affichés dans la liste des participants sur cette page. Mon inscription sera transmise à Mr Grulois (a3d.contact@gmail.com).</label>
+            <label for="f-consent" style="cursor:pointer"><strong style="color:#8b1a2e">Obligatoire :</strong> J'accepte que mon prénom et ma matière soient affichés dans la liste des participants sur cette page. Mon inscription sera transmise à Mr Grulois (a3d.contact@gmail.com).</label>
           </div>
         </div>
       </div>
@@ -410,6 +410,16 @@ function renderList() {
 
 async function submitForm(e) {
   e.preventDefault();
+  
+  // Vérification manuelle de la case obligatoire
+  if (!document.getElementById('f-consent').checked) {
+    document.getElementById('f-consent').closest('.checkbox-row').style.outline = '2px solid #8b1a2e';
+    document.getElementById('f-consent').closest('.checkbox-row').style.borderRadius = '6px';
+    document.getElementById('f-consent').closest('.checkbox-row').style.padding = '6px';
+    document.getElementById('f-consent').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    alert('⚠️ Vous devez cocher la case de consentement pour vous inscrire.');
+    return;
+  }
   const btn = document.getElementById('btn-submit');
   const regs = getRegistrations();
   const email = document.getElementById('f-email').value.trim().toLowerCase();
