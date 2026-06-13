@@ -328,6 +328,12 @@
             <label for="f-consent" style="cursor:pointer"><strong style="color:#8b1a2e">Obligatoire :</strong> J'accepte que mon prénom et ma matière soient affichés dans la liste des participants sur cette page. Mon inscription sera transmise à Mr Grulois (a3d.contact@gmail.com).</label>
           </div>
         </div>
+        <div class="form-group full">
+          <div class="checkbox-row" style="background:#f5f8ee;border:1.5px solid #A8D040;border-radius:8px;padding:10px 14px;">
+            <input type="checkbox" id="f-absent">
+            <label for="f-absent" style="cursor:pointer"><strong style="color:#5a7a10">Je serai absent(e)</strong> mais je souhaite recevoir le fascicule et les informations de la session.</label>
+          </div>
+        </div>
       </div>
       <button type="submit" class="btn-submit" id="btn-submit">✅ Je confirme ma présence — Mardi 23 juin 13h30</button>
     </form>
@@ -400,10 +406,10 @@ function renderList() {
   }
   list.innerHTML = regs.map(r => `
     <div class="reg-item">
-      <div class="reg-avatar">${getInitials(r.prenom, r.nom)}</div>
+      <div class="reg-avatar" style="background:${r.absent ? '#A8D040' : '#8b1a2e'}">${getInitials(r.prenom, r.nom)}</div>
       <div>
-        <div class="reg-name">${r.prenom} ${r.nom}</div>
-        <div class="reg-meta">${r.matiere} · inscrit(e) le ${r.date}</div>
+        <div class="reg-name">${r.prenom} ${r.nom} ${r.absent ? '<span style="font-size:0.75rem;background:#f5f8ee;color:#5a7a10;border:1px solid #A8D040;border-radius:99px;padding:1px 8px;margin-left:6px">fascicule</span>' : ''}</div>
+        <div class="reg-meta">${r.matiere} · ${r.absent ? 'absent(e)' : 'inscrit(e)'} le ${r.date}</div>
       </div>
     </div>`).join('');
 }
@@ -431,11 +437,12 @@ async function submitForm(e) {
   const nom     = document.getElementById('f-nom').value.trim();
   const matiere = document.getElementById('f-matiere').value;
   const message = document.getElementById('f-message').value.trim();
+  const absent  = document.getElementById('f-absent').checked;
   const now     = new Date();
   const dateStr = now.toLocaleDateString('fr-BE', { day:'2-digit', month:'short', year:'numeric' });
 
   // Sauvegarder localement d'abord
-  regs.push({ prenom, nom, email, matiere, message, date: dateStr });
+  regs.push({ prenom, nom, email, matiere, message, absent, date: dateStr });
   saveRegistrations(regs);
 
   // Désactiver le bouton et afficher l'indicateur
@@ -450,7 +457,8 @@ async function submitForm(e) {
       matiere,
       message: message || '(aucun)',
       date:    dateStr,
-      total:   regs.length
+      total:   regs.length,
+      statut:  absent ? '⚠️ ABSENT(E) — souhaite recevoir le fascicule' : '✅ PRÉSENT(E)'
     });
     // Succès
     document.getElementById('sending-msg').classList.remove('show');
@@ -494,9 +502,11 @@ function updateHero() {
 function exportCSV() {
   const regs = getRegistrations();
   if (!regs.length) { alert('Aucun inscrit pour le moment.'); return; }
-  const header = 'Prénom,Nom,Email,Matière,Message,Date';
+  const header = 'Prénom,Nom,Email,Matière,Statut,Message,Date';
   const rows = regs.map(r =>
-    [r.prenom, r.nom, r.email, r.matiere, (r.message||'').replace(/,/g,''), r.date]
+    [r.prenom, r.nom, r.email, r.matiere,
+     r.absent ? 'Absent — fascicule' : 'Présent(e)',
+     (r.message||'').replace(/,/g,''), r.date]
       .map(v => `"${v}"`).join(','));
   const csv  = [header, ...rows].join('\n');
   const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
